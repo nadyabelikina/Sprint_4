@@ -15,8 +15,27 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class OrderPage {
-    private WebDriver driver;
-
+    private final WebDriver driver;
+    private final By buttonOrderTop = By.cssSelector(".Button_Button__ra12g");
+    private final By buttonOrderBottom = By.cssSelector(".Button_Button__ra12g.Button_Middle__1CSJM");
+    private final By scrollButton = By.cssSelector(".Home_FinishButton__1_cWm");
+    private final By inputNameField = By.cssSelector("input[placeholder='* Имя']");
+    private final By inputSurNameField = By.cssSelector("input[placeholder='* Фамилия']");
+    private final By inputAddressField = By.cssSelector("input[placeholder='* Адрес: куда привезти заказ']");
+    private final By allStationsField = By.cssSelector(".select-search");
+    private final By nameStation = By.cssSelector(".select-search__input");
+    private final By stationButton = By.cssSelector("ul.select-search__options li.select-search__row[data-index='0'] button");
+    private final By inputPhoneField = By.cssSelector("input[placeholder='* Телефон: на него позвонит курьер']");
+    private final By buttonFurther = By.cssSelector(".Button_Button__ra12g.Button_Middle__1CSJM");
+    private final By inputDateField = By.cssSelector("input[placeholder='* Когда привезти самокат']");
+    private final By dropDownArrow = By.cssSelector(".Dropdown-arrow");
+    private final By dropDownList = By.cssSelector(".Dropdown-option");
+    private final By inputCheckboxFieldBlack = By.cssSelector("input[id='black']");
+    private final By inputCheckboxFieldGrey = By.cssSelector("input[id='grey']");
+    private final By inputMessageField = By.cssSelector("input[placeholder='Комментарий для курьера']");
+    private final By clickButtonOrder = By.cssSelector(".Order_Buttons__1xGrp button:nth-child(2)");
+    private final By ConfirmClickButtonOrder = By.cssSelector(".Order_Modal__YZ-d3 .Order_Buttons__1xGrp button:nth-child(2)");
+    private final By statusButton = By.cssSelector(".Order_NextButton__1_rCA button:nth-child(1)");
 
     public OrderPage(WebDriver driver) {
         this.driver = driver;
@@ -36,16 +55,15 @@ public class OrderPage {
     }
 
     public void clickTopButtonOrder(){
-        driver.findElement(By.cssSelector(".Button_Button__ra12g")).click();
+        driver.findElement(buttonOrderTop).click();
     }
 
     public void clickBottomButtonOrder(){
-        driver.findElement(By.cssSelector(".Button_Button__ra12g.Button_Middle__1CSJM")).click();
-        //System.out.println(driver.findElement(By.cssSelector(".Home_FinishButton__1_cWm  button:nth-child(1)")).getText());
+        driver.findElement(buttonOrderBottom).click();
     }
 
     public void scrollToButton() {
-        WebElement element = driver.findElement(By.cssSelector(".Home_FinishButton__1_cWm"));
+        WebElement element = driver.findElement(scrollButton);
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
     }
     public  void openPageOrder(){
@@ -62,45 +80,41 @@ public class OrderPage {
 
     }
     public void inputName(String name){
-        By inputNameField = By.cssSelector("input[placeholder='* Имя']");
         new WebDriverWait(driver, Duration.ofSeconds(EnvConfig.EXPLICITY_TIMEOUT)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(inputNameField));
         Assert.assertTrue(driver.findElement(inputNameField).isDisplayed());
         driver.findElement(inputNameField).sendKeys(name);
     }
 
     public void inputSurname(String surname){
-        By inputSurNameField = By.cssSelector("input[placeholder='* Фамилия']");
         new WebDriverWait(driver, Duration.ofSeconds(EnvConfig.EXPLICITY_TIMEOUT)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(inputSurNameField));
         Assert.assertTrue(driver.findElement(inputSurNameField).isDisplayed());
         driver.findElement(inputSurNameField).sendKeys(surname);
     }
 
     public void inputAddress(String address){
-        By inputAddressField = By.cssSelector("input[placeholder='* Адрес: куда привезти заказ']");
+
         new WebDriverWait(driver, Duration.ofSeconds(EnvConfig.EXPLICITY_TIMEOUT)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(inputAddressField));
         Assert.assertTrue(driver.findElement(inputAddressField).isDisplayed());
         driver.findElement(inputAddressField).sendKeys(address);
     }
     public void inputStation(String station){
-        By allStationsField = By.cssSelector(".select-search");
         driver.findElement(allStationsField).click();
-        By nameStation = By.cssSelector(".select-search__input");
         new WebDriverWait(driver, Duration.ofSeconds(EnvConfig.EXPLICITY_TIMEOUT)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(allStationsField));
         Assert.assertTrue(driver.findElement(nameStation).isDisplayed());
         driver.findElement(nameStation).sendKeys(station);
-        driver.findElement(By.cssSelector("ul.select-search__options li.select-search__row[data-index='0'] button")).click();
+        driver.findElement(stationButton).click();
 
 
     }
     public void inputPhone(String phoneNumber){
-        By inputPhoneField = By.cssSelector("input[placeholder='* Телефон: на него позвонит курьер']");
+
         new WebDriverWait(driver, Duration.ofSeconds(EnvConfig.EXPLICITY_TIMEOUT)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(inputPhoneField));
         Assert.assertTrue(driver.findElement(inputPhoneField).isDisplayed());
         driver.findElement(inputPhoneField).sendKeys(phoneNumber);
     }
 
     public void clickButtonFurther(){
-        driver.findElement(By.cssSelector(".Button_Button__ra12g.Button_Middle__1CSJM")).click();
+        driver.findElement(buttonFurther).click();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(EnvConfig.INPLICITY_TIMEOUT));
     }
     public void inputRentDataInFields(){
@@ -111,7 +125,7 @@ public class OrderPage {
 
     }
     public void inputDate(){
-        By inputDateField = By.cssSelector("input[placeholder='* Когда привезти самокат']");
+
         new WebDriverWait(driver, Duration.ofSeconds(EnvConfig.EXPLICITY_TIMEOUT)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(inputDateField));
         Assert.assertTrue(driver.findElement(inputDateField).isDisplayed());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -120,11 +134,11 @@ public class OrderPage {
         driver.findElement(inputDateField).sendKeys(dateMonthYear.format(formatter));
         String classDate=".react-datepicker__day.react-datepicker__day--0"+onlyDate+".react-datepicker__day--selected.react-datepicker__day--today";
         driver.findElement(By.cssSelector(classDate)).click();
-        //System.out.println(classDate);
     }
+
     public void rentalPeriod(String Period){
-        driver.findElement(By.cssSelector(".Dropdown-arrow")).click();
-        List<WebElement> elements =  driver.findElements(By.cssSelector(".Dropdown-option"));
+        driver.findElement(dropDownArrow).click();
+        List<WebElement> elements =  driver.findElements(dropDownList);
         for (WebElement e : elements) {
             String elem = e.getText();
             if(Period.equalsIgnoreCase(elem)){
@@ -136,17 +150,15 @@ public class OrderPage {
     }
     public void colorScooter(String color) {
        if(color == "black"){
-           By inputCheckboxField = By.cssSelector("input[id='black']");
-           driver.findElement(inputCheckboxField).click();
+           driver.findElement(inputCheckboxFieldBlack).click();
        }
         if(color == "grey"){
-            By inputCheckboxField = By.cssSelector("input[id='grey']");
-            driver.findElement(inputCheckboxField).click();
+            driver.findElement(inputCheckboxFieldGrey).click();
         }
 
     }
     public void commentsForCourier(String message){
-        By inputMessageField = By.cssSelector("input[placeholder='Комментарий для курьера']");
+
         new WebDriverWait(driver, Duration.ofSeconds(EnvConfig.EXPLICITY_TIMEOUT)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(inputMessageField));
         Assert.assertTrue(driver.findElement(inputMessageField).isDisplayed());
         driver.findElement(inputMessageField).sendKeys(message);
@@ -155,17 +167,17 @@ public class OrderPage {
     public void clickButtonOrder()
     {
        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(EnvConfig.INPLICITY_TIMEOUT));
-       driver.findElement(By.cssSelector(".Order_Buttons__1xGrp button:nth-child(2)")).click();
+       driver.findElement(clickButtonOrder).click();
     }
     public void confirmClickButtonOrder()
     {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(EnvConfig.INPLICITY_TIMEOUT));
         //Order_Modal__YZ-d3
-        driver.findElement(By.cssSelector(".Order_Modal__YZ-d3 .Order_Buttons__1xGrp button:nth-child(2)")).click();
+        driver.findElement(ConfirmClickButtonOrder).click();
     }
 
     public void confirmOrder(){
-        By statusButton = By.cssSelector(".Order_NextButton__1_rCA button:nth-child(1)");
+
         if(driver.findElement(statusButton).isEnabled()){
             System.out.println("-------------------------------");
             System.out.println("Тест пройден");

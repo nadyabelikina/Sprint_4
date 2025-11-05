@@ -14,9 +14,16 @@ import java.time.Duration;
 import java.util.List;
 
 public class MainPage {
-    private WebDriver driver;
+    private final WebDriver driver;
+    private final By accordionPanel = By.cssSelector(".accordion__panel");
+    private final  By errorTitle = By.cssSelector(".accordion__button");
+    private final By accordion = By.cssSelector(".accordion");
+    private final By accordionItem = By.cssSelector(".accordion__item");
+
+
     public MainPage(WebDriver driver){
         this.driver = driver;
+
 
     }
 
@@ -31,12 +38,11 @@ public class MainPage {
 
 
     public String getBodyText(WebElement e){
-        return e.findElement(By.cssSelector(".accordion__panel")).getText();
+       return e.findElement(accordionPanel).getText();
     }
 
 
     public String getTitleText(WebElement e, WebDriver driver){
-        By errorTitle = By.cssSelector(".accordion__button");
         new WebDriverWait(driver, Duration.ofSeconds(EnvConfig.EXPLICITY_TIMEOUT)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(errorTitle));
         Assert.assertTrue(driver.findElement(errorTitle).isDisplayed());
 
@@ -61,13 +67,14 @@ public class MainPage {
 
 
     public void scrollToAccordion() {
-        WebElement element = driver.findElement(By.cssSelector(".accordion"));
+        WebElement element = driver.findElement(accordion);
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
     }
 
 
     public void findAndCompareAccordeonElements() {
-        List<WebElement> elements = driver.findElements(By.cssSelector(".accordion__item"));
+
+        List<WebElement> elements = driver.findElements(accordionItem);
         int j=0;
         for (WebElement e : elements) {
 
