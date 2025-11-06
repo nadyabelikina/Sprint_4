@@ -22,6 +22,7 @@ public class DriverFactory extends ExternalResource {
         }else{
           startChrome();
 
+
         }
     }
 

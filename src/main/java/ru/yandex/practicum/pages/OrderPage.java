@@ -130,7 +130,7 @@ public class OrderPage {
         Assert.assertTrue(driver.findElement(inputDateField).isDisplayed());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         LocalDate  dateMonthYear = LocalDate.now();
-        int onlyDate = dateMonthYear.getDayOfMonth();
+        String onlyDate = String.format("%02d", dateMonthYear.getDayOfMonth());
         driver.findElement(inputDateField).sendKeys(dateMonthYear.format(formatter));
         String classDate=".react-datepicker__day.react-datepicker__day--0"+onlyDate+".react-datepicker__day--selected.react-datepicker__day--today";
         driver.findElement(By.cssSelector(classDate)).click();

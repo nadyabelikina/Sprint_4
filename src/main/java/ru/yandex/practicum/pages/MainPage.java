@@ -9,6 +9,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import ru.yandex.practicum.pages.util.EnvConfig;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 import java.time.Duration;
 import java.util.List;
@@ -36,10 +39,6 @@ public class MainPage {
 
     }
 
-
-    public String getBodyText(WebElement e){
-       return e.findElement(accordionPanel).getText();
-    }
 
 
     public String getTitleText(WebElement e, WebDriver driver){
@@ -71,104 +70,54 @@ public class MainPage {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
     }
 
-
-    public void findAndCompareAccordeonElements() {
-
+    public String getFaqQuestion(int i){
         List<WebElement> elements = driver.findElements(accordionItem);
         int j=0;
+        String FaqQuestion = "";
         for (WebElement e : elements) {
 
             openAccordeonBody(driver, e, j);
-            String titleText = getTitleText(e, driver);
-            String bodyText = getBodyText(e);
+            if(j==i)
+            {
+                new WebDriverWait(driver, Duration.ofSeconds(EnvConfig.EXPLICITY_TIMEOUT)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(errorTitle));
+                Assert.assertTrue(driver.findElement(errorTitle).isDisplayed());
 
-            System.out.println("-------------------------------");
-            System.out.println("Проверка FAQ #"+(j+1));
-
-            if(compareTitleElements(titleText, j)) {
-
-                if(compareBodyElements(bodyText, j)){
-                    System.out.println("Тест FAQ #"+(j+1)+" пройден.");
-                }else{
-                    System.out.println("Тест FAQ #"+(j+1)+" не пройден.");
-                }
-            }else{
-                System.out.println("Проверка FAQ #"+(j+1)+" не пройден.");
+                FaqQuestion =  e.findElement(errorTitle).getText();
             }
-            closeAccordeonBody(driver, e, j);
 
+            closeAccordeonBody(driver, e, j);
             j++;
 
         }
+        return FaqQuestion;
     }
 
+    public String getFaqAnswer(int i){
+        List<WebElement> elements = driver.findElements(accordionItem);
+        int j=0;
+        String FaqAnswer = "";
+        for (WebElement e : elements) {
 
-    public boolean compareTitleElements(String elem, int i){
-        return  referenceTitleText(i).equals(elem);
-    }
+            openAccordeonBody(driver, e, j);
+            if(j==i)
+            {
+               String htmlString = driver.findElement(By.cssSelector("div[id='accordion__panel-"+j+"']")).getAttribute("outerHTML");
+                Pattern pattern = Pattern.compile("<p>(.*?)</p>");
+                Matcher matcher = pattern.matcher(htmlString);
+                if (matcher.find()) {
+                    FaqAnswer = matcher.group(1);
+                }
 
-
-    public boolean compareBodyElements(String elem, int i){
-        return  referenceBodyText(i).equals(elem);
-    }
-
-
-    public String referenceTitleText(int numberFAQ) {
-        switch (numberFAQ) {
-            case 0:
-                return "Сколько это стоит? И как оплатить?";
-            case 1:
-                return "Хочу сразу несколько самокатов! Так можно?";
-
-            case 2:
-                return "Как рассчитывается время аренды?";
-            case 3:
-                return "Можно ли заказать самокат прямо на сегодня?";
-
-            case 4:
-                return "Можно ли продлить заказ или вернуть самокат раньше?";
-
-            case 5:
-                return "Вы привозите зарядку вместе с самокатом?";
-
-            case 6:
-                return "Можно ли отменить заказ?";
-
-            case 7:
-                return "Я жизу за МКАДом, привезёте?";
-
-            default:
-                return "Что-то пошло не так";
+            }
+                closeAccordeonBody(driver, e, j);
+            j++;
 
         }
+        return FaqAnswer;
     }
 
-    public String referenceBodyText(int numberFAQ) {
-        switch (numberFAQ) {
-            case 0:
-                return "Сутки — 400 рублей. Оплата курьеру — наличными или картой.";
-            case 1:
-                return "Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим.";
-            case 2:
-                return "Допустим, вы оформляете заказ на 8 мая. Мы привозим самокат 8 мая в течение дня. Отсчёт времени аренды начинается с момента, когда вы оплатите заказ курьеру. Если мы привезли самокат 8 мая в 20:30, суточная аренда закончится 9 мая в 20:30.";
-            case 3:
-                return "Только начиная с завтрашнего дня. Но скоро станем расторопнее.";
-            case 4:
-                return "Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по красивому номеру 1010.";
-            case 5:
-                return "Самокат приезжает к вам с полной зарядкой. Этого хватает на восемь суток — даже если будете кататься без передышек и во сне. Зарядка не понадобится.";
 
-            case 6:
-                return "Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не попросим. Все же свои.";
-
-            case 7:
-                return "Да, обязательно. Всем самокатов! И Москве, и Московской области.";
-
-            default:
-                return "Что-то пошло не так";
-
-        }
-    }
 
 
 }
+
