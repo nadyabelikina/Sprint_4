@@ -177,17 +177,7 @@ public class OrderPage {
     }
 
     public void confirmOrder(){
-
-        if(driver.findElement(statusButton).isEnabled()){
-            System.out.println("-------------------------------");
-            System.out.println("Тест пройден");
-        }
-        else {
-            System.out.println("-------------------------------");
-            System.out.println("Тест провален");
-        }
-
-
+        Assert.assertTrue(driver.findElement(statusButton).isDisplayed());
     }
 }
 
